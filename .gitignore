@@ -32,3 +32,13 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+.idea/
+.terraform/
+*/.idea
+*/.terraform/
+*/terraform.tfstate.backup
+**/*secret.auto.tfvars
+.DS_Store
+venv/
+set_env.sh
