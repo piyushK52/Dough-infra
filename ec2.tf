@@ -34,6 +34,16 @@ resource "aws_security_group_rule" "https_request" {
   description              = "Access from internet"
 }
 
+resource "aws_security_group_rule" "streamlit_server" {
+  type                     = "ingress"
+  from_port                = 8501
+  to_port                  = 8501
+  protocol                 = "tcp"
+  cidr_blocks              = ["0.0.0.0/0"]
+  security_group_id        = aws_security_group.ec2_security_group.id
+  description              = "Access from internet"
+}
+
 resource "aws_security_group_rule" "ec2_security_group_full_egress" {
   type              = "egress"
   protocol          = "all"
