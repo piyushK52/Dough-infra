@@ -42,3 +42,4 @@ terraform.rc
 .DS_Store
 venv/
 set_env.sh
+.vscode/
