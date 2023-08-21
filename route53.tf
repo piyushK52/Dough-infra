@@ -19,3 +19,15 @@ resource "aws_route53_record" "www_banodoco_website" {
   ttl     = 300
   records = ["banodoco.ai"]
 }
+
+resource "aws_route53_record" "banodoco_frontend_app" {
+  zone_id = aws_route53_zone.banodoco.zone_id
+  name    = "app.banodoco.ai"
+  type    = "A"
+
+  alias {
+    name                   = aws_lb.public_lb.dns_name
+    zone_id                = aws_lb.public_lb.zone_id
+    evaluate_target_health = true
+  }
+}

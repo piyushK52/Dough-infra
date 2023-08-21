@@ -192,3 +192,5 @@ resource "aws_s3_bucket_acl" "banodoco_data_acl_public" {
     }
   }
 }
+
+# -------------------------------------------------------------

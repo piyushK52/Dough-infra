@@ -52,3 +52,32 @@ resource "aws_iam_instance_profile" "ec2_ssm_access_profile" {
   name = "ec2_ssm_access_profile"
   role = aws_iam_role.ec2_ssm_access_role.name
 }
+
+data "template_file" "ecs_task_execution_policy_json" {
+  template = file("./templates/iam/ecs-policy.json.tpl")
+}
+
+resource "aws_iam_role" "ecs_task_role" {
+  name               = "ecs-task-role"
+  assume_role_policy = data.template_file.ecs_task_execution_policy_json.rendered
+}
+
+resource "aws_iam_role" "ecs_task_execution_role" {
+  name               = "ecs-task-execution-role"
+  assume_role_policy = data.template_file.ecs_task_execution_policy_json.rendered
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_task_execution_policy_attachment" {
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+  role       = aws_iam_role.ecs_task_execution_role.name
+}
+
+resource "aws_iam_role_policy_attachment" "s3_full_access_policy_attachment_ecs_task" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+  role       = aws_iam_role.ecs_task_role.id
+}
+
+resource "aws_iam_role_policy_attachment" "ssm_permissions_policy_attachment_ecs_task" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMReadOnlyAccess"
+  role       = aws_iam_role.ecs_task_role.name
+}
