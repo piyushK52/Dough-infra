@@ -9,7 +9,7 @@ resource "aws_alb_target_group" "app" {
   health_check {
     interval            = "30"
     protocol            = "HTTP"
-    matcher             = "200-299"
+    matcher             = "200-399"
     timeout             = "3"
     path                = var.app_health_check_path
     unhealthy_threshold = "5"
@@ -21,28 +21,20 @@ resource "aws_alb_target_group" "app" {
   }
 }
 
-# NOTE: direct routing request here (not using cloudfront)
-# resource "aws_lb_listener_rule" "cf_auth_listener_rule" {
-#   listener_arn = var.alb_listener_arn
+resource "aws_lb_listener_rule" "default_listener_rule" {
+  listener_arn = var.alb_listener_arn
 
-#   action {
-#     type             = "forward"
-#     target_group_arn = aws_alb_target_group.app.arn
-#   }
+  action {
+    type             = "forward"
+    target_group_arn = aws_alb_target_group.app.arn
+  }
 
-#   condition {
-#     http_header {
-#       http_header_name = "cf-authorization"
-#       values           = [var.cf_authorization_hash]
-#     }
-#   }
-
-#   condition {
-#     host_header {
-#       values = [var.app_cname]
-#     }
-#   }
-# }
+  condition {
+    host_header {
+      values = [var.app_cname]
+    }
+  }
+}
 
 resource "aws_lb_listener_rule" "health_check_listener_rule" {
   listener_arn = var.alb_listener_arn
@@ -61,26 +53,6 @@ resource "aws_lb_listener_rule" "health_check_listener_rule" {
   condition {
     path_pattern {
       values = [var.app_health_check_path, var.app_info_path]
-    }
-  }
-}
-
-resource "aws_lb_listener_rule" "websocket_rule" {
-  listener_arn = var.alb_listener_arn
-  priority    = 100
-
-  action {
-    type             = "fixed-response"
-    fixed_response {
-      content_type = "text/plain"
-      message_body = "HEALTHY"
-      status_code  = "200"
-    }
-  }
-
-  condition {
-    host_header {
-      values = [var.app_cname]
     }
   }
 }

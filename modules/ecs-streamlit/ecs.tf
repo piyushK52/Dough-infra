@@ -13,7 +13,7 @@ resource "aws_ecs_task_definition" "app" {
   container_definitions = jsonencode([
     {
       "name" : "${var.team}-${var.app_name}",
-      "image" : "${var.aws_account_no}.dkr.ecr.${var.aws_region}.amazonaws.com/${var.team}/${var.app_name}:latest",
+      "image" : "${var.aws_account_no}.dkr.ecr.${var.aws_region}.amazonaws.com/${var.app_name}:latest",
       "cpu" : "${var.fargate_cpu}",
       "memory" : "${var.fargate_memory}",
       "networkMode" : "awsvpc",

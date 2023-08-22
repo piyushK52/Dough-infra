@@ -1,7 +1,7 @@
 module "banodoco_frontend" {
     source = "./modules/repository"
 
-    app_name = "banodoco_frontend"
+    app_name = "banodoco-frontend"
     iam_user_name = "github_user"
 }
 

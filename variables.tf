@@ -20,7 +20,7 @@ variable "az_count" {
 
 variable app_port {
     description = "Port at which streamlit is running"
-    default     = 8501
+    default     = 5500
 }
 
 variable infra_config {
