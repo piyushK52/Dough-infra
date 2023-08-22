@@ -25,14 +25,14 @@ variable app_port {
 
 variable infra_config {
     description = "env values"
-    type        = map(object({
+    type        = object({
         banodoco_frontend = object({
             cname       = string
             instances   = number
             cpu         = number
             memory      = number             
         })
-    }))
+    })
 
     default = {
         banodoco_frontend = {

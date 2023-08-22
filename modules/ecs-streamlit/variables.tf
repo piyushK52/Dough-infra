@@ -28,11 +28,6 @@ variable "alb_listener_arn" {
   type        = string
 }
 
-variable "cf_authorization_hash" {
-  description = "Value to accept for CloudFront authorization"
-  type        = string
-}
-
 variable "app_count" {
   description = "Number of instances of this service to create"
   type        = number

@@ -26,8 +26,8 @@ resource "aws_route53_record" "banodoco_frontend_app" {
   type    = "A"
 
   alias {
-    name                   = aws_lb.public_lb.dns_name
-    zone_id                = aws_lb.public_lb.zone_id
+    name                   = aws_alb.public_lb.dns_name
+    zone_id                = aws_alb.public_lb.zone_id
     evaluate_target_health = true
   }
 }

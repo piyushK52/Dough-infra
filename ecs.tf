@@ -8,7 +8,7 @@ resource "aws_security_group" "ecs_security_group" {
     protocol        = "tcp"
     from_port       = var.app_port
     to_port         = var.app_port
-    security_groups = [aws_security_group.public_lb_security_group.id, aws_security_group.private_lb_security_group.id]
+    security_groups = [aws_security_group.public_lb_security_group.id]
   }
 
   egress {
@@ -25,7 +25,7 @@ module "ecs_streamlit_frontend" {
   alb_domain_name    = aws_alb.public_lb.dns_name
   alb_listener_arn   = aws_alb_listener.public_lb_listener.arn
   app_cname          = var.infra_config.banodoco_frontend.cname
-  app_name           = "banodoco_frontend"
+  app_name           = "banodoco-frontend"
   aws_region         = var.aws_region
   execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
   private_subnet_ids = aws_subnet.private.*.id
@@ -37,9 +37,8 @@ module "ecs_streamlit_frontend" {
   fargate_memory     = var.infra_config.banodoco_frontend.memory
   environment        = var.env
 
-  aws_account_no        = aws_caller_identity.current.account_id
+  aws_account_no        = data.aws_caller_identity.current.account_id
   team                  = "backend"
-  cf_authorization_hash = var.infra_config[var.env].cf_authorization_header
 
   ssl_certificate    = aws_acm_certificate.wild_card_banodoco_ssl_cert.arn
   public_lb_name     = aws_alb.public_lb.name
