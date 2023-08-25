@@ -30,16 +30,46 @@ variable infra_config {
             cname       = string
             instances   = number
             cpu         = number
-            memory      = number             
+            memory      = number
+            app_port        = number       
+        }),
+        banodoco_backend = object({
+            cname       = string
+            instances   = number
+            cpu         = number
+            memory      = number
+            app_port        = number   
+        }),
+        banodoco_ai_rds = object({
+            allocated_storage       = number
+            max_allocated_storage   = number
+            instance_class          = string
+            username                = string
+            password                = string
         })
     })
 
     default = {
         banodoco_frontend = {
-            instances = 1
-            cpu       = 512
-            memory    = 2048
-            cname     = "app.banodoco.ai"
-        }
+            instances   = 1
+            cpu         = 512
+            memory      = 2048
+            cname       = "app.banodoco.ai"
+            app_port    = 5500    
+        },
+        banodoco_backend = {
+            instances   = 1
+            cpu         = 512
+            memory      = 2048
+            cname       = "api.banodoco.ai"
+            app_port    = 8000    
+        },
+        banodoco_ai_rds = {
+            allocated_storage     = 50
+            max_allocated_storage = 100
+            instance_class        = "db.t3.micro"
+            username              = "banodoco_admin"
+            password              = "knmsjjGFWPBVP4Jq"
+      }
     }
 }
