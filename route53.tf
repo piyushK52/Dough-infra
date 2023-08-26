@@ -31,3 +31,15 @@ resource "aws_route53_record" "banodoco_frontend_app" {
     evaluate_target_health = true
   }
 }
+
+resource "aws_route53_record" "banodoco_backend_app" {
+  zone_id = aws_route53_zone.banodoco.zone_id
+  name    = "api.banodoco.ai"
+  type    = "A"
+
+  alias {
+    name                   = aws_alb.public_lb.dns_name
+    zone_id                = aws_alb.public_lb.zone_id
+    evaluate_target_health = true
+  }
+}
