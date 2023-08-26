@@ -55,6 +55,17 @@ resource "aws_security_group_rule" "rds_security_group_full_egress" {
   description       = "Full access to the Internet"
 }
 
+# full ingress access: temporary
+resource "aws_security_group_rule" "rds_security_group_full_ingress" {
+  type              = "ingress"
+  protocol          = "all"
+  from_port         = 0
+  to_port           = 0
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.rds_security_group.id
+  description       = "Full access to the Internet"
+}
+
 resource "aws_db_parameter_group" "rds_parameter_group" {
   name   = "${var.name}-parameter-group"
   family = "postgres13"
@@ -98,4 +109,3 @@ resource "aws_db_instance" "rds_instance" {
   performance_insights_retention_period = 7
   monitoring_role_arn                   = aws_iam_role.monitoring_rds_iam_assume_role.arn
 }
-

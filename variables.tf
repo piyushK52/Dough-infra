@@ -62,7 +62,7 @@ variable infra_config {
             cpu         = 512
             memory      = 2048
             cname       = "api.banodoco.ai"
-            app_port    = 8000    
+            app_port    = 8080
         },
         banodoco_ai_rds = {
             allocated_storage     = 50

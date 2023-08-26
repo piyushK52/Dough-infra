@@ -81,3 +81,29 @@ resource "aws_iam_role_policy_attachment" "ssm_permissions_policy_attachment_ecs
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMReadOnlyAccess"
   role       = aws_iam_role.ecs_task_role.name
 }
+
+# backend user for s3 access ---------------------------------------
+resource "aws_iam_user" "s3_user" {
+  name = "s3-access-user"
+}
+
+resource "aws_iam_access_key" "s3_access_key" {
+  user = aws_iam_user.s3_user.name
+}
+
+resource "aws_iam_user_policy_attachment" "s3_policy_attachment" {
+  user       = aws_iam_user.s3_user.name
+  policy_arn = aws_iam_policy.s3_access_policy.arn
+}
+
+output "iam_user_access_key" {
+  value = aws_iam_access_key.s3_access_key.secret
+  sensitive = true
+}
+
+output "iam_user_access_key_id" {
+  value = aws_iam_access_key.s3_access_key.id
+  sensitive = true
+}
+
+# ------------------------------------------------------------------
