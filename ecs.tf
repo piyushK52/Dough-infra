@@ -4,10 +4,18 @@ resource "aws_security_group" "ecs_security_group" {
   vpc_id      = aws_vpc.main.id
 
   ingress {
-    description     = ""
+    description     = "streamlit access"
     protocol        = "tcp"
-    from_port       = var.app_port
-    to_port         = var.app_port
+    from_port       = var.infra_config.banodoco_frontend.app_port
+    to_port         = var.infra_config.banodoco_frontend.app_port
+    security_groups = [aws_security_group.public_lb_security_group.id]
+  }
+
+  ingress {
+    description     = "django access"
+    protocol        = "tcp"
+    from_port       = var.infra_config.banodoco_backend.app_port
+    to_port         = var.infra_config.banodoco_backend.app_port
     security_groups = [aws_security_group.public_lb_security_group.id]
   }
 
@@ -37,7 +45,7 @@ module "ecs_streamlit_frontend" {
   fargate_memory        = var.infra_config.banodoco_frontend.memory
   environment           = var.env
   app_health_check_path = "/healthz"
-  app_port              = var.app_port
+  app_port              = var.infra_config.banodoco_frontend.app_port
 
   aws_account_no = data.aws_caller_identity.current.account_id
   team           = "backend"
