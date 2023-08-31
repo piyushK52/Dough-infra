@@ -16,6 +16,12 @@ resource "aws_alb_target_group" "app" {
     healthy_threshold   = "2"
   }
 
+  stickiness {
+    type              = "lb_cookie"
+    enabled           = var.sticky_cookies ? true : false
+    cookie_duration   = 604800
+  }
+
   lifecycle {
     create_before_destroy = true
   }

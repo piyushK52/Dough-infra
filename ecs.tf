@@ -46,6 +46,7 @@ module "ecs_streamlit_frontend" {
   environment           = var.env
   app_health_check_path = "/healthz"
   app_port              = var.infra_config.banodoco_frontend.app_port
+  sticky_cookies        = var.infra_config.banodoco_frontend.sticky_cookies
 
   aws_account_no = data.aws_caller_identity.current.account_id
   team           = "backend"
@@ -76,6 +77,7 @@ module "ecs_banodoco_backend" {
   environment           = var.env
   app_health_check_path = "/health-check"
   app_port              = var.infra_config.banodoco_backend.app_port
+  sticky_cookies        = var.infra_config.banodoco_backend.sticky_cookies
 
   aws_account_no = data.aws_caller_identity.current.account_id
   team           = "backend"

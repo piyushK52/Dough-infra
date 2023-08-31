@@ -56,6 +56,12 @@ variable "app_port" {
   default     = 8080
 }
 
+variable "sticky_cookies" {
+  description = "Bool for enabling sticky cookies"
+  type        = bool
+  default     = false
+}
+
 variable "aws_region" {
   description = "The AWS region this service is running in."
   type        = string

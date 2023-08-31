@@ -27,18 +27,20 @@ variable infra_config {
     description = "env values"
     type        = object({
         banodoco_frontend = object({
-            cname       = string
-            instances   = number
-            cpu         = number
-            memory      = number
-            app_port        = number       
+            cname           = string
+            instances       = number
+            cpu             = number
+            memory          = number
+            app_port        = number
+            sticky_cookies  = bool
         }),
         banodoco_backend = object({
-            cname       = string
-            instances   = number
-            cpu         = number
-            memory      = number
-            app_port        = number   
+            cname           = string
+            instances       = number
+            cpu             = number
+            memory          = number
+            app_port        = number
+            sticky_cookies  = bool
         }),
         banodoco_ai_rds = object({
             allocated_storage       = number
@@ -51,18 +53,20 @@ variable infra_config {
 
     default = {
         banodoco_frontend = {
-            instances   = 1
-            cpu         = 512
-            memory      = 2048
-            cname       = "app.banodoco.ai"
-            app_port    = 5500    
+            instances       = 3
+            cpu             = 512
+            memory          = 2048
+            cname           = "app.banodoco.ai"
+            app_port        = 5500
+            sticky_cookies  = true
         },
         banodoco_backend = {
-            instances   = 1
-            cpu         = 512
-            memory      = 2048
-            cname       = "api.banodoco.ai"
-            app_port    = 8080
+            instances       = 1
+            cpu             = 512
+            memory          = 2048
+            cname           = "api.banodoco.ai"
+            app_port        = 8080
+            sticky_cookies  = false
         },
         banodoco_ai_rds = {
             allocated_storage     = 50
