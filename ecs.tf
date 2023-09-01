@@ -88,3 +88,34 @@ module "ecs_banodoco_backend" {
 
   module_depends_on = aws_alb_listener.public_lb_listener
 }
+
+module "ecs_streamlit_website" {
+  source = "./modules/ecs-streamlit"
+
+  alb_domain_name       = aws_alb.public_lb.dns_name
+  alb_listener_arn      = aws_alb_listener.public_lb_listener.arn
+  app_cname             = var.infra_config.banodoco_website.cname
+  app_name              = "banodoco-website"
+  aws_region            = var.aws_region
+  execution_role_arn    = aws_iam_role.ecs_task_execution_role.arn
+  private_subnet_ids    = aws_subnet.private.*.id
+  security_group_id     = aws_security_group.ecs_security_group.id
+  task_role_arn         = aws_iam_role.ecs_task_role.arn
+  vpc_id                = aws_vpc.main.id
+  app_count             = var.infra_config.banodoco_website.instances
+  fargate_cpu           = var.infra_config.banodoco_website.cpu
+  fargate_memory        = var.infra_config.banodoco_website.memory
+  environment           = var.env
+  app_health_check_path = "/healthz"
+  app_port              = var.infra_config.banodoco_website.app_port
+  sticky_cookies        = var.infra_config.banodoco_website.sticky_cookies
+
+  aws_account_no = data.aws_caller_identity.current.account_id
+  team           = "frontend"
+
+  ssl_certificate    = aws_acm_certificate.banodoco_ssl_cert.arn
+  public_lb_name     = aws_alb.public_lb.name
+  public_lb_dns_name = aws_alb.public_lb.dns_name
+
+  module_depends_on = aws_alb_listener.public_lb_listener
+}

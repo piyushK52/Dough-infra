@@ -50,3 +50,10 @@ module "banodoco_backend" {
 
     app_name            = "banodoco-backend"
 }
+
+# streamlit website
+module "banodoco_website" {
+    source  = "./modules/repository"
+
+    app_name            = "banodoco-website"
+}

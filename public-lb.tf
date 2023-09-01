@@ -43,7 +43,6 @@ resource "aws_alb_listener" "public_lb_listener" {
   port              = 443
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-2016-08"
-  certificate_arn   = aws_acm_certificate.wild_card_banodoco_ssl_cert.arn
 
   default_action {
     type = "fixed-response"
@@ -53,4 +52,14 @@ resource "aws_alb_listener" "public_lb_listener" {
       status_code  = 403
     }
   }
+}
+
+resource "aws_lb_listener_certificate" "wildcard_certificate" {
+  listener_arn    = aws_alb_listener.public_lb_listener.arn
+  certificate_arn = aws_acm_certificate.wild_card_banodoco_ssl_cert.arn
+}
+
+resource "aws_lb_listener_certificate" "domain_certificate" {
+  listener_arn    = aws_alb_listener.public_lb_listener.arn
+  certificate_arn = aws_acm_certificate.banodoco_ssl_cert.arn
 }

@@ -34,6 +34,14 @@ variable infra_config {
             app_port        = number
             sticky_cookies  = bool
         }),
+        banodoco_website = object({
+            cname           = string
+            instances       = number
+            cpu             = number
+            memory          = number
+            app_port        = number
+            sticky_cookies  = bool
+        }),
         banodoco_backend = object({
             cname           = string
             instances       = number
@@ -57,6 +65,14 @@ variable infra_config {
             cpu             = 512
             memory          = 2048
             cname           = "app.banodoco.ai"
+            app_port        = 5500
+            sticky_cookies  = true
+        },
+        banodoco_website = {
+            instances       = 2
+            cpu             = 512
+            memory          = 2048
+            cname           = "banodoco.ai"
             app_port        = 5500
             sticky_cookies  = true
         },
