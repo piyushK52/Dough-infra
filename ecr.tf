@@ -9,7 +9,7 @@ data "aws_iam_policy_document" "ecr_policy" {
 # allowing pipeline to register new task
 data "aws_iam_policy_document" "ecs_policy" {
   statement {
-    actions   = ["ecs:RegisterTaskDefinition", "ecs:DescribeServices", "ecs:UpdateService"]
+    actions   = ["ecs:RegisterTaskDefinition", "ecs:DescribeServices", "ecs:UpdateService", "ecs:ListTasks", "ecs:ExecuteCommand"]
     resources = ["*"]
   }
 }

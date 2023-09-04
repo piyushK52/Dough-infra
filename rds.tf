@@ -10,7 +10,7 @@ module "banodoco_rds" {
   instance_class          = var.infra_config.banodoco_ai_rds.instance_class
   allocated_storage       = var.infra_config.banodoco_ai_rds.allocated_storage
   max_allocated_storage   = var.infra_config.banodoco_ai_rds.max_allocated_storage
-  proxy_machine_ip        = aws_instance.banodoco_website.private_ip
+  proxy_machine_ip        = aws_instance.proxy_machine.private_ip
 }
 
 output "resource_id" {

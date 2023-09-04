@@ -54,7 +54,7 @@ resource "aws_security_group_rule" "ec2_security_group_full_egress" {
   description       = "Full access to the Internet"
 }
 
-resource "aws_instance" "banodoco_website" {
+resource "aws_instance" "proxy_machine" {
   ami                       = "ami-06984ea821ac0a879"
   instance_type             = "t2.micro"
   vpc_security_group_ids    = [
@@ -66,11 +66,11 @@ resource "aws_instance" "banodoco_website" {
   iam_instance_profile = aws_iam_instance_profile.ec2_ssm_access_profile.name
 
   tags = {
-    Name = "ec2"
+    Name = "proxy_machine"
   }
 }
 
-resource "aws_instance" "test_ec2" {
+resource "aws_instance" "github_workflow" {
   ami                       = "ami-06984ea821ac0a879"
   instance_type             = "t2.micro"
   vpc_security_group_ids    = [
@@ -82,6 +82,6 @@ resource "aws_instance" "test_ec2" {
   iam_instance_profile = aws_iam_instance_profile.ec2_ssm_access_profile.name
 
   tags = {
-    Name = "test_instance"
+    Name = "github_workflow"
   }
 }
