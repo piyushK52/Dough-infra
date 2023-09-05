@@ -7,3 +7,9 @@ resource "aws_acm_certificate" "banodoco_ssl_cert" {
   domain_name       = "banodoco.ai"
   validation_method = "DNS"
 }
+
+resource "aws_acm_certificate" "wild_card_cloudfront_banodoco_ssl_cert" {
+  provider          = aws.east_1
+  domain_name       = "*.banodoco.ai"
+  validation_method = "DNS"
+}

@@ -20,3 +20,8 @@ provider "aws" {
     shared_credentials_file = "$HOME/.aws/credentials"
     profile = "personal"
 }
+
+provider "aws" {
+  alias   = "east_1"
+  region  = "us-east-1"
+}
