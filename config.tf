@@ -1,18 +1,18 @@
-# terraform {
-#   backend s3 {
-#     bucket  = "bitboy-auto-backend-tf-new"
-#     key     = "infra/terraform.tfstate"
-#     region  = "ap-south-1"
-#     dynamodb_table = "terraform-state-locking"
-#     encrypt = true
-#   }
-# }
-
 terraform {
-  backend "local" {
-    path = "./terraform.tfstate"
+  backend s3 {
+    bucket  = "banodoco-auto-backend-tf"
+    key     = "infra/terraform.tfstate"
+    region  = "ap-south-1"
+    dynamodb_table = "terraform-state-locking"
+    encrypt = true
   }
 }
+
+# terraform {
+#   backend "local" {
+#     path = "./terraform.tfstate"
+#   }
+# }
 
 provider "aws" {
     alias   = "south-1"

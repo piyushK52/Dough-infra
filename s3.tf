@@ -194,3 +194,55 @@ resource "aws_s3_bucket_acl" "banodoco_data_acl_public" {
 }
 
 # -------------------------------------------------------------
+
+
+# --------------- BANODOCO TF BUCKET (PROD BUCKET)
+resource "aws_s3_bucket" "banodoco_tf_data_bucket" {
+  bucket = "banodoco-auto-backend-tf"
+}
+
+resource "aws_s3_bucket_ownership_controls" "tf_ownership_control" {
+  bucket = aws_s3_bucket.banodoco_tf_data_bucket.id
+  rule {
+    object_ownership = "ObjectWriter"
+  }
+}
+
+resource "aws_s3_bucket_public_access_block" "tf_access_block" {
+  bucket = aws_s3_bucket.banodoco_tf_data_bucket.id
+
+  block_public_acls       = false
+  block_public_policy     = false
+  ignore_public_acls      = false
+  restrict_public_buckets = false
+}
+
+
+resource "aws_s3_bucket_acl" "banodoco_tf_data_acl_prod" {
+  depends_on = [
+    aws_s3_bucket_ownership_controls.tf_ownership_control,
+    aws_s3_bucket_public_access_block.tf_access_block
+  ]
+
+  bucket = aws_s3_bucket.banodoco_tf_data_bucket.id
+  access_control_policy {
+    grant {
+      grantee {
+        type = "CanonicalUser"
+        id = data.aws_canonical_user_id.current.id
+      }
+      permission = "WRITE"
+    }
+
+    grant {
+      grantee {
+        type = "CanonicalUser"
+        id = data.aws_canonical_user_id.current.id
+      }
+      permission = "READ"
+    }
+    owner {
+      id = data.aws_canonical_user_id.current.id
+    }
+  }
+}
