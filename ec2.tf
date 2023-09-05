@@ -85,3 +85,18 @@ resource "aws_instance" "github_workflow" {
     Name = "github_workflow"
   }
 }
+
+resource "aws_instance" "discord_data_bot" {
+  ami                       = "ami-0f5ee92e2d63afc18"
+  instance_type             = "t2.medium"
+  vpc_security_group_ids    = [
+    aws_security_group.ec2_security_group.id
+  ]
+  key_name                  = "discord_bot_instance_key"
+  subnet_id                 = aws_subnet.public[0].id
+  associate_public_ip_address = "true"
+
+  tags = {
+    Name = "discord_data_bot"
+  }
+}
