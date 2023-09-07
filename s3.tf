@@ -149,7 +149,7 @@ data "aws_iam_policy_document" "allow_read_from_public" {
 
     principals {
       type        = "AWS"
-      identifiers = [aws_iam_role.ec2_ssm_access_role.arn]
+      identifiers = [aws_iam_role.ec2_ssm_access_role.arn, aws_iam_user.s3_user.arn]
     }
 
     actions = [

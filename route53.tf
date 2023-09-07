@@ -58,3 +58,12 @@ resource "aws_route53_record" "payment_static_page" {
     evaluate_target_health  = false
   }
 }
+
+# GOOGLE WORKSPACE VERIFICATION
+resource "aws_route53_record" "txt_record" {
+  zone_id = aws_route53_zone.banodoco.zone_id
+  name    = ""
+  type    = "TXT"
+  ttl     = 300
+  records = ["google-site-verification=pEVHas4MOI24-OStHRdnw49QUwIk52vNRHiX1qyqTMI"]
+}

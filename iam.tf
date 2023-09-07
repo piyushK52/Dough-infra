@@ -87,13 +87,13 @@ resource "aws_iam_user" "s3_user" {
   name = "s3-access-user"
 }
 
-resource "aws_iam_access_key" "s3_access_key" {
-  user = aws_iam_user.s3_user.name
-}
-
 resource "aws_iam_user_policy_attachment" "s3_policy_attachment" {
   user       = aws_iam_user.s3_user.name
   policy_arn = aws_iam_policy.s3_access_policy.arn
+}
+
+resource "aws_iam_access_key" "s3_access_key" {
+  user = aws_iam_user.s3_user.name
 }
 
 output "iam_user_access_key" {
