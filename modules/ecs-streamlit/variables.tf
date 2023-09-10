@@ -87,9 +87,9 @@ variable "private_subnet_ids" {
   type        = list(string)
 }
 
-variable "security_group_id" {
-  description = "The ID of the security group for this service"
-  type        = string
+variable "security_group_id_list" {
+  description = "The ID list of the security groups for this service"
+  type        = list(string)
 }
 
 variable "task_role_arn" {
@@ -105,6 +105,16 @@ variable "vpc_id" {
 variable "module_depends_on" {
   type    = any
   default = null
+}
+
+variable "discovery_service_arn" {
+  type    = any
+  default = null
+}
+
+variable "environment_variables" {
+  type    = list(map(any))
+  default = []
 }
 
 variable "ssl_certificate" {
