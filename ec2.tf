@@ -108,18 +108,18 @@ resource "aws_instance" "test_instance" {
   }
 }
 
-resource "aws_instance" "discord_bndc_bot" {
-  ami                       = "ami-0f5ee92e2d63afc18"
-  instance_type             = "t2.medium"
-  vpc_security_group_ids    = [
-    aws_security_group.ec2_security_group.id
-  ]
-  key_name                  = "banodoco_key"
-  subnet_id                 = aws_subnet.public[0].id
-  associate_public_ip_address = "true"
-  iam_instance_profile = aws_iam_instance_profile.ec2_ssm_access_profile.name
+# resource "aws_instance" "discord_bndc_bot" {
+#   ami                       = "ami-0f5ee92e2d63afc18"
+#   instance_type             = "t2.medium"
+#   vpc_security_group_ids    = [
+#     aws_security_group.ec2_security_group.id
+#   ]
+#   key_name                  = "banodoco_key"
+#   subnet_id                 = aws_subnet.public[0].id
+#   associate_public_ip_address = "true"
+#   iam_instance_profile = aws_iam_instance_profile.ec2_ssm_access_profile.name
 
-  tags = {
-    Name = "discord_bndc_bot"
-  }
-}
+#   tags = {
+#     Name = "discord_bndc_bot"
+#   }
+# }
