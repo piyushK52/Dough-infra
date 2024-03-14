@@ -67,3 +67,30 @@ resource "aws_route53_record" "txt_record" {
   ttl     = 300
   records = ["google-site-verification=pEVHas4MOI24-OStHRdnw49QUwIk52vNRHiX1qyqTMI"]
 }
+
+# BNDC.ai
+# --------------------------------------
+
+resource "aws_route53_zone" "bndc" {
+    name = "bndc.ai"
+}
+
+resource "aws_route53_record" "bndc_payment_static_page" {
+  zone_id = aws_route53_zone.bndc.zone_id
+  name    = "payment.bndc.ai"
+  type    = "A"
+
+  alias {
+    name                    = "${module.payment_bndc_success_external_service.cloudfront_domain_name}"
+    zone_id                 = "Z2FDTNDATAQYW2"
+    evaluate_target_health  = false
+  }
+}
+
+resource "aws_route53_record" "bndc_api_record" {
+  zone_id = aws_route53_zone.bndc.zone_id
+  name    = "api.bndc.ai"
+  type    = "A"
+  ttl     = "3600"
+  records = [aws_instance.discord_bndc_bot.public_ip]
+}

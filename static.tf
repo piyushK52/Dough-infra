@@ -11,3 +11,13 @@ module "payment_success_external_service" {
   aws_cloudfront_origin_access_identity_arn  = aws_cloudfront_origin_access_identity.external_ui_bucket_access_identity.iam_arn
   aws_cloudfront_origin_access_identity_path = aws_cloudfront_origin_access_identity.external_ui_bucket_access_identity.cloudfront_access_identity_path
 }
+
+module "payment_bndc_success_external_service" {
+  source = "./modules/external-static-service"
+
+  bucket                                     = "stripe-bndc-payment"
+  cname                                      = "payment.bndc.ai"
+  cf_ssl_cert                                = aws_acm_certificate.wild_card_cloudfront_bndc_ssl_cert.arn
+  aws_cloudfront_origin_access_identity_arn  = aws_cloudfront_origin_access_identity.external_ui_bucket_access_identity.iam_arn
+  aws_cloudfront_origin_access_identity_path = aws_cloudfront_origin_access_identity.external_ui_bucket_access_identity.cloudfront_access_identity_path
+}
