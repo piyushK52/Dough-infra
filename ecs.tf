@@ -61,13 +61,13 @@ resource "aws_security_group" "ecs_security_group" {
   description = "Security group for ECs"
   vpc_id      = aws_vpc.main.id
 
-  # ingress {
-  #   description     = "streamlit access"
-  #   protocol        = "tcp"
-  #   from_port       = var.infra_config.banodoco_frontend.app_port
-  #   to_port         = var.infra_config.banodoco_frontend.app_port
-  #   security_groups = [aws_security_group.public_lb_security_group.id]
-  # }
+  ingress {
+    description     = "streamlit access"
+    protocol        = "tcp"
+    from_port       = var.infra_config.banodoco_frontend.app_port
+    to_port         = var.infra_config.banodoco_frontend.app_port
+    security_groups = [aws_security_group.public_lb_security_group.id]
+  }
 
   ingress {
     description     = "django access"
@@ -78,13 +78,13 @@ resource "aws_security_group" "ecs_security_group" {
   }
 
 
-  ingress {
-    description     = "Allow traffic from EC2 machine"
-    protocol        = "tcp"
-    from_port       = 0
-    to_port         = 65535
-    cidr_blocks     = ["${aws_instance.proxy_machine.private_ip}/32"]
-  }
+  # ingress {
+  #   description     = "Allow traffic from EC2 machine"
+  #   protocol        = "tcp"
+  #   from_port       = 0
+  #   to_port         = 65535
+  #   cidr_blocks     = ["${aws_instance.proxy_machine.private_ip}/32"]
+  # }
 
   egress {
     protocol    = "-1"
