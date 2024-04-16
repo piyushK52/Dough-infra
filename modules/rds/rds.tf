@@ -86,7 +86,7 @@ resource "aws_db_instance" "rds_instance" {
   allocated_storage                     = var.allocated_storage
   max_allocated_storage                 = var.max_allocated_storage
   engine                                = "postgres"
-  engine_version                        = "13.10"
+  engine_version                        = "13.13"
   storage_type                          = "gp2"
   username                              = var.username
   password                              = var.password

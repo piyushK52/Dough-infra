@@ -87,10 +87,10 @@ resource "aws_route53_record" "bndc_payment_static_page" {
   }
 }
 
-# resource "aws_route53_record" "bndc_api_record" {
-#   zone_id = aws_route53_zone.bndc.zone_id
-#   name    = "api.bndc.ai"
-#   type    = "A"
-#   ttl     = "3600"
-#   records = [aws_instance.discord_bndc_bot.public_ip]
-# }
+resource "aws_route53_record" "bndc_api_record" {
+  zone_id = aws_route53_zone.bndc.zone_id
+  name    = "api.bndc.ai"
+  type    = "A"
+  ttl     = "3600"
+  records = [aws_instance.discord_bndc_bot.public_ip]
+}
