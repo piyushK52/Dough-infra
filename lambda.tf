@@ -51,7 +51,6 @@ resource "aws_iam_role_policy_attachment" "lambda_general_s3_temp_attachment" {
 }
 
 resource "aws_lambda_function" "cleanup_cron" {
-  provider      = aws.east_1
   filename      = "./lambda/lambda_cleanup_cron.zip"
   function_name = "lambda_cleanup_cron"
   role          = aws_iam_role.lambda_iam_assume_role.arn
