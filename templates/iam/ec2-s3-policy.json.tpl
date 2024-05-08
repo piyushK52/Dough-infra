@@ -8,7 +8,9 @@
             "Resource": ["arn:aws:s3:::banodoco-data-bucket", 
             "arn:aws:s3:::banodoco-data-bucket/*", 
             "arn:aws:s3:::banodoco-data-bucket-public", 
-            "arn:aws:s3:::banodoco-data-bucket-public/*"]
+            "arn:aws:s3:::banodoco-data-bucket-public/*",
+            "arn:aws:s3:::banodoco-temp-data-bucket-public", 
+            "arn:aws:s3:::banodoco-temp-data-bucket-public/*"]
         }
     ]
 }
