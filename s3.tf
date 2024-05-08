@@ -195,6 +195,102 @@ resource "aws_s3_bucket_acl" "banodoco_data_acl_public" {
 
 # -------------------------------------------------------------
 
+# TODO: convert into modules and remove code repetition
+# --------------- BANODOCO TEMP DATA BUCKET PUBLIC (FOR DATA THAT IS PERIODICALLY DELETED)
+resource "aws_s3_bucket" "banodoco_temp_data_bucket_public" {
+  bucket = "banodoco-temp-data-bucket-public"
+}
+
+resource "aws_s3_bucket_ownership_controls" "temp_ownership_control" {
+  bucket = aws_s3_bucket.banodoco_temp_data_bucket_public.id
+  rule {
+    object_ownership = "ObjectWriter"
+  }
+}
+
+resource "aws_s3_bucket_public_access_block" "temp_access_block" {
+  bucket = aws_s3_bucket.banodoco_temp_data_bucket_public.id
+
+  block_public_acls       = false
+  block_public_policy     = false
+  ignore_public_acls      = false
+  restrict_public_buckets = false
+}
+
+data "aws_iam_policy_document" "allow_read_from_public_temp" {
+  statement {
+    effect = "Allow"
+
+    principals {
+      type = "*"
+      identifiers = ["*"]
+    }
+
+    actions = [
+      "s3:GetObject"
+    ]
+
+    resources = [
+      aws_s3_bucket.banodoco_temp_data_bucket_public.arn,
+      "${aws_s3_bucket.banodoco_temp_data_bucket_public.arn}/*",
+    ]
+  }
+
+  statement {
+    effect = "Allow"
+
+    principals {
+      type        = "AWS"
+      identifiers = [aws_iam_role.ec2_ssm_access_role.arn, aws_iam_user.s3_user.arn]
+    }
+
+    actions = [
+      "s3:*"
+    ]
+
+    resources = [
+      aws_s3_bucket.banodoco_temp_data_bucket_public.arn,
+      "${aws_s3_bucket.banodoco_temp_data_bucket_public.arn}/*",
+    ]
+  }
+}
+
+resource "aws_s3_bucket_policy" "allow_read_from_public_temp" {
+  bucket = aws_s3_bucket.banodoco_temp_data_bucket_public.id
+  policy = data.aws_iam_policy_document.allow_read_from_public_temp.json
+}
+
+resource "aws_s3_bucket_acl" "banodoco_temp_data_acl_public" {
+  depends_on = [
+    aws_s3_bucket_ownership_controls.temp_ownership_control,
+    aws_s3_bucket_public_access_block.temp_access_block
+  ]
+
+  bucket = aws_s3_bucket.banodoco_temp_data_bucket_public.id
+  access_control_policy {
+    grant {
+      grantee {
+        type = "CanonicalUser"
+        id = data.aws_canonical_user_id.current.id
+      }
+      permission = "WRITE"
+    }
+
+    grant {
+      grantee {
+        type = "CanonicalUser"
+        id = data.aws_canonical_user_id.current.id
+      }
+      permission = "READ"
+    }
+    owner {
+      id = data.aws_canonical_user_id.current.id
+    }
+  }
+}
+
+# -------------------------------------------------------------
+
 
 # --------------- BANODOCO TF BUCKET (PROD BUCKET)
 resource "aws_s3_bucket" "banodoco_tf_data_bucket" {
