@@ -122,7 +122,7 @@ resource "aws_lambda_function" "generate_zip" {
 
   runtime = "python3.10"
 
-  memory_size = 256
+  memory_size = 1024
   timeout = 100
 
   layers = [
