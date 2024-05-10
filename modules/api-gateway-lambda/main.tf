@@ -12,11 +12,12 @@ resource "aws_api_gateway_resource" "resource" {
 
 #  defining methods for the endpoints -----------------
 resource "aws_api_gateway_method" "method" {
-  for_each      = var.endpoints
-  rest_api_id   = aws_api_gateway_rest_api.api.id
-  resource_id   = aws_api_gateway_resource.resource[each.key].id
-  http_method   = "POST"
-  authorization = "NONE"
+  for_each         = var.endpoints
+  rest_api_id      = aws_api_gateway_rest_api.api.id
+  resource_id      = aws_api_gateway_resource.resource[each.key].id
+  http_method      = "POST"
+  authorization    = "NONE"
+  api_key_required = true
 }
 
 # connecting the methods to the lambda functions ----------------------
@@ -97,10 +98,10 @@ resource "aws_api_gateway_usage_plan_key" "usage_plan_key" {
 resource "aws_api_gateway_method_settings" "logging_settings" {
   rest_api_id = aws_api_gateway_rest_api.api.id
   stage_name  = aws_api_gateway_deployment.prod_deployment.stage_name
-  method_path = "*/*"  # Enable logging for all methods and paths
+  method_path = "*/*" # Enable logging for all methods and paths
 
   settings {
-    logging_level = "INFO"
+    logging_level   = "INFO"
     metrics_enabled = true
   }
 }
