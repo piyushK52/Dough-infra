@@ -1,5 +1,5 @@
 resource "aws_api_gateway_api_key" "api_key" {
-  name = "banodoco-api-key"
+  name = "utility-api-key"
 }
 
 output "api_key_value" {
