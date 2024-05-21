@@ -26,6 +26,10 @@ module "api_gateway" {
       lambda_function_name = aws_lambda_function.generate_collage.function_name
       lambda_invoke_arn    = aws_lambda_function.generate_collage.invoke_arn
     }
+    "refresh-url" = {
+      lambda_function_name = aws_lambda_function.refresh_url.function_name
+      lambda_invoke_arn    = aws_lambda_function.refresh_url.invoke_arn
+    }
   }
 }
 
