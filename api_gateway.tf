@@ -30,6 +30,10 @@ module "api_gateway" {
       lambda_function_name = aws_lambda_function.refresh_url.function_name
       lambda_invoke_arn    = aws_lambda_function.refresh_url.invoke_arn
     }
+    "file-zip" = {
+      lambda_function_name = aws_lambda_function.file_zip.function_name
+      lambda_invoke_arn    = aws_lambda_function.file_zip.invoke_arn
+    }
   }
 }
 

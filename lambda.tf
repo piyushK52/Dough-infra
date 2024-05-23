@@ -161,3 +161,29 @@ resource "aws_lambda_function" "refresh_url" {
     aws_iam_role_policy_attachment.lambda_general_s3_temp_attachment
   ]
 }
+
+
+resource "aws_lambda_function" "file_zip" {
+  filename      = "./lambda/any_file_zip.zip"
+  function_name = "file_zip"
+  role          = aws_iam_role.lambda_iam_assume_role.arn
+  handler       = "lambda_handler.generate_zip"
+  publish       = true
+
+  source_code_hash = filebase64sha256("./lambda/any_file_zip.zip")
+
+  runtime = "python3.10"
+
+  memory_size = 1024
+  timeout = 100
+
+  layers = [
+    var.pillow_layer_arn,
+    var.requests_layer_arn
+  ]
+
+  depends_on = [
+    aws_iam_role_policy_attachment.lambda_general_policy_attachment,
+    aws_iam_role_policy_attachment.lambda_general_s3_temp_attachment
+  ]
+}
