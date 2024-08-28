@@ -33,6 +33,11 @@ variable "app_count" {
   type        = number
 }
 
+variable "max_app_count" {
+  description = "Maximum number of instances of this service that can be created"
+  type        = number
+}
+
 variable "app_health_check_path" {
   description = "The name of the endpoint to hit to determine if the application is healthy"
   type        = string

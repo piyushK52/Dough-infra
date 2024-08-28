@@ -1,6 +1,6 @@
 # internal namespace & discovery service -----------------------------
 resource "aws_service_discovery_private_dns_namespace" "internal" {
-  name = "mvp.internal"
+  name        = "mvp.internal"
   description = "service discovery dns namespace for user service"
 
   vpc = aws_vpc.main.id
@@ -29,12 +29,12 @@ resource "aws_service_discovery_service" "backend" {
 locals {
   environment_variables = [
     {
-      "name": "SERVER_URL",
-      "value": "${aws_service_discovery_service.backend.name}.${aws_service_discovery_private_dns_namespace.internal.name}"
+      "name" : "SERVER_URL",
+      "value" : "${aws_service_discovery_service.backend.name}.${aws_service_discovery_private_dns_namespace.internal.name}"
     },
     {
-      "name": "TEST_2",
-      "value": "test"
+      "name" : "TEST_2",
+      "value" : "test"
     }
   ]
 }
@@ -48,11 +48,11 @@ resource "aws_security_group" "ecs_discovery_security_group" {
   vpc_id      = aws_vpc.main.id
 
   ingress {
-    description            = "other ECS services"
-    protocol               = "tcp"
-    from_port              = 0
-    to_port                = 65535
-    security_groups        = [aws_security_group.ecs_security_group.id]
+    description     = "other ECS services"
+    protocol        = "tcp"
+    from_port       = 0
+    to_port         = 65535
+    security_groups = [aws_security_group.ecs_security_group.id]
   }
 }
 
@@ -129,23 +129,24 @@ resource "aws_security_group" "ecs_security_group" {
 module "ecs_banodoco_backend" {
   source = "./modules/ecs-streamlit"
 
-  alb_domain_name             = aws_alb.public_lb.dns_name
-  alb_listener_arn            = aws_alb_listener.public_lb_listener.arn
-  app_cname                   = var.infra_config.banodoco_backend.cname
-  app_name                    = "banodoco-backend"
-  aws_region                  = var.aws_region
-  execution_role_arn          = aws_iam_role.ecs_task_execution_role.arn
-  private_subnet_ids          = aws_subnet.private.*.id
-  security_group_id_list      = [aws_security_group.ecs_security_group.id, aws_security_group.ecs_discovery_security_group.id]
-  task_role_arn               = aws_iam_role.ecs_task_role.arn
-  vpc_id                      = aws_vpc.main.id
-  app_count                   = var.infra_config.banodoco_backend.instances
-  fargate_cpu                 = var.infra_config.banodoco_backend.cpu
-  fargate_memory              = var.infra_config.banodoco_backend.memory
-  environment                 = var.env
-  app_health_check_path       = "/health-check"
-  app_port                    = var.infra_config.banodoco_backend.app_port
-  sticky_cookies              = var.infra_config.banodoco_backend.sticky_cookies
+  alb_domain_name        = aws_alb.public_lb.dns_name
+  alb_listener_arn       = aws_alb_listener.public_lb_listener.arn
+  app_cname              = var.infra_config.banodoco_backend.cname
+  app_name               = "banodoco-backend"
+  aws_region             = var.aws_region
+  execution_role_arn     = aws_iam_role.ecs_task_execution_role.arn
+  private_subnet_ids     = aws_subnet.private.*.id
+  security_group_id_list = [aws_security_group.ecs_security_group.id, aws_security_group.ecs_discovery_security_group.id]
+  task_role_arn          = aws_iam_role.ecs_task_role.arn
+  vpc_id                 = aws_vpc.main.id
+  app_count              = var.infra_config.banodoco_backend.instances
+  max_app_count          = var.infra_config.banodoco_backend.max_instances
+  fargate_cpu            = var.infra_config.banodoco_backend.cpu
+  fargate_memory         = var.infra_config.banodoco_backend.memory
+  environment            = var.env
+  app_health_check_path  = "/health-check"
+  app_port               = var.infra_config.banodoco_backend.app_port
+  sticky_cookies         = var.infra_config.banodoco_backend.sticky_cookies
 
   aws_account_no = data.aws_caller_identity.current.account_id
   team           = "backend"
@@ -154,30 +155,64 @@ module "ecs_banodoco_backend" {
   public_lb_name     = aws_alb.public_lb.name
   public_lb_dns_name = aws_alb.public_lb.dns_name
 
-  module_depends_on = aws_alb_listener.public_lb_listener
+  module_depends_on     = aws_alb_listener.public_lb_listener
   discovery_service_arn = aws_service_discovery_service.backend.arn
+}
+
+module "ecs_banodoco_ss" {
+  source = "./modules/ecs-streamlit"
+
+  alb_domain_name        = aws_alb.public_lb.dns_name
+  alb_listener_arn       = aws_alb_listener.public_lb_listener.arn
+  app_cname              = var.infra_config.banodoco_scale_server.cname
+  app_name               = "banodoco-ss"
+  aws_region             = var.aws_region
+  execution_role_arn     = aws_iam_role.ecs_task_execution_role.arn
+  private_subnet_ids     = aws_subnet.private.*.id
+  security_group_id_list = [aws_security_group.ecs_security_group.id, aws_security_group.ecs_discovery_security_group.id]
+  task_role_arn          = aws_iam_role.ecs_task_role.arn
+  vpc_id                 = aws_vpc.main.id
+  app_count              = var.infra_config.banodoco_scale_server.instances
+  max_app_count          = var.infra_config.banodoco_scale_server.max_instances
+  fargate_cpu            = var.infra_config.banodoco_scale_server.cpu
+  fargate_memory         = var.infra_config.banodoco_scale_server.memory
+  environment            = var.env
+  app_health_check_path  = "/health-check"
+  app_port               = var.infra_config.banodoco_scale_server.app_port
+  sticky_cookies         = var.infra_config.banodoco_scale_server.sticky_cookies
+
+  aws_account_no = data.aws_caller_identity.current.account_id
+  team           = "ss"
+
+  ssl_certificate    = aws_acm_certificate.wild_card_banodoco_ssl_cert.arn
+  public_lb_name     = aws_alb.public_lb.name
+  public_lb_dns_name = aws_alb.public_lb.dns_name
+
+  module_depends_on     = aws_alb_listener.public_lb_listener
+  environment_variables = local.environment_variables
 }
 
 module "ecs_streamlit_website" {
   source = "./modules/ecs-streamlit"
 
-  alb_domain_name             = aws_alb.public_lb.dns_name
-  alb_listener_arn            = aws_alb_listener.public_lb_listener.arn
-  app_cname                   = var.infra_config.banodoco_website.cname
-  app_name                    = "banodoco-website"
-  aws_region                  = var.aws_region
-  execution_role_arn          = aws_iam_role.ecs_task_execution_role.arn
-  private_subnet_ids          = aws_subnet.private.*.id
-  security_group_id_list      = [aws_security_group.ecs_security_group.id, aws_security_group.ecs_discovery_security_group.id]
-  task_role_arn               = aws_iam_role.ecs_task_role.arn
-  vpc_id                      = aws_vpc.main.id
-  app_count                   = var.infra_config.banodoco_website.instances
-  fargate_cpu                 = var.infra_config.banodoco_website.cpu
-  fargate_memory              = var.infra_config.banodoco_website.memory
-  environment                 = var.env
-  app_health_check_path       = "/healthz"
-  app_port                    = var.infra_config.banodoco_website.app_port
-  sticky_cookies              = var.infra_config.banodoco_website.sticky_cookies
+  alb_domain_name        = aws_alb.public_lb.dns_name
+  alb_listener_arn       = aws_alb_listener.public_lb_listener.arn
+  app_cname              = var.infra_config.banodoco_website.cname
+  app_name               = "banodoco-website"
+  aws_region             = var.aws_region
+  execution_role_arn     = aws_iam_role.ecs_task_execution_role.arn
+  private_subnet_ids     = aws_subnet.private.*.id
+  security_group_id_list = [aws_security_group.ecs_security_group.id, aws_security_group.ecs_discovery_security_group.id]
+  task_role_arn          = aws_iam_role.ecs_task_role.arn
+  vpc_id                 = aws_vpc.main.id
+  app_count              = var.infra_config.banodoco_website.instances
+  max_app_count          = var.infra_config.banodoco_website.max_instances
+  fargate_cpu            = var.infra_config.banodoco_website.cpu
+  fargate_memory         = var.infra_config.banodoco_website.memory
+  environment            = var.env
+  app_health_check_path  = "/healthz"
+  app_port               = var.infra_config.banodoco_website.app_port
+  sticky_cookies         = var.infra_config.banodoco_website.sticky_cookies
 
   aws_account_no = data.aws_caller_identity.current.account_id
   team           = "frontend"

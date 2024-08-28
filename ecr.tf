@@ -16,7 +16,7 @@ data "aws_iam_policy_document" "ecs_policy" {
 
 data "aws_iam_policy_document" "pass_role_policy" {
   statement {
-    actions   = ["iam:GetRole", "iam:PassRole"]
+    actions = ["iam:GetRole", "iam:PassRole"]
     resources = [
       aws_iam_role.ecs_task_execution_role.arn,
       aws_iam_role.ecs_task_role.arn
@@ -27,7 +27,7 @@ data "aws_iam_policy_document" "pass_role_policy" {
 resource "aws_iam_policy" "pass_role_policy" {
   name        = "PassEcsTaskRolePolicy"
   description = "Allows passing the ecs-task-role to ECS tasks."
-  policy = data.aws_iam_policy_document.pass_role_policy.json
+  policy      = data.aws_iam_policy_document.pass_role_policy.json
 }
 
 resource "aws_iam_policy" "ecr_policy" {
@@ -69,32 +69,39 @@ resource "aws_iam_user_policy_attachment" "attach_pass_role_policy" {
 
 # access keys
 output "access_key" {
-  value = aws_iam_access_key.ecr_access_key.id
+  value     = aws_iam_access_key.ecr_access_key.id
   sensitive = true
 }
 
 output "secret_key" {
-  value = aws_iam_access_key.ecr_access_key.secret
+  value     = aws_iam_access_key.ecr_access_key.secret
   sensitive = true
 }
 
 # streamlit frontend
 module "banodoco_frontend" {
-    source = "./modules/repository"
+  source = "./modules/repository"
 
-    app_name            = "banodoco-frontend"
+  app_name = "banodoco-frontend"
 }
 
 # django backend
 module "banodoco_backend" {
-    source  = "./modules/repository"
+  source = "./modules/repository"
 
-    app_name            = "banodoco-backend"
+  app_name = "banodoco-backend"
 }
 
 # streamlit website
 module "banodoco_website" {
-    source  = "./modules/repository"
+  source = "./modules/repository"
 
-    app_name            = "banodoco-website"
+  app_name = "banodoco-website"
+}
+
+# scale server
+module "banodoco_ss" {
+  source = "./modules/repository"
+
+  app_name = "banodoco-scale-server"
 }
