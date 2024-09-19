@@ -30,7 +30,7 @@ resource "aws_alb" "public_lb" {
   security_groups    = [aws_security_group.public_lb_security_group.id]
   internal           = false
   load_balancer_type = "application"
-  idle_timeout       = 240
+  idle_timeout       = 3600
 
   access_logs {
     enabled = true

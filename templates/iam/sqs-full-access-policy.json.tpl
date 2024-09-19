@@ -10,11 +10,19 @@
           ]
         },
         "Action": [
-          "sqs:GetQueueUrl",
           "sqs:CreateQueue",
+          "sqs:GetQueueUrl",
+          "sqs:GetQueueAttributes",
+          "sqs:ListQueues",
           "sqs:SendMessage",
+          "sqs:SendMessageBatch",
           "sqs:ReceiveMessage",
-          "sqs:DeleteMessage"
+          "sqs:DeleteMessage",
+          "sqs:DeleteMessageBatch",
+          "sqs:PurgeQueue",
+          "sqs:ChangeMessageVisibility",
+          "sqs:ChangeMessageVisibilityBatch",
+          "sqs:GetQueueAttributes"
         ],
         "Resource": ${jsonencode(queue_arns)}
       }

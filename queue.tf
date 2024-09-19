@@ -1,7 +1,7 @@
 # -------------- defining SQS queues ---------------------------------
 variable "queue_names" {
   type    = list(string)
-  default = ["job_queue.fifo", "output_queue.fifo"]
+  default = ["job_queue.fifo", "job_queue_1.fifo", "job_queue_2.fifo", "output_queue.fifo"]
 }
 
 resource "aws_sqs_queue" "fifo_queues" {

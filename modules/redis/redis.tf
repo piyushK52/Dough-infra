@@ -32,7 +32,17 @@ resource "aws_security_group_rule" "redis_security_group_ingress_ec2" {
   protocol                 = "tcp"
   source_security_group_id = var.ec2_security_group
   security_group_id        = aws_security_group.redis_security_group.id
-  description              = "acces from ec2 tasks"
+  description              = "access from ec2 tasks"
+}
+
+resource "aws_security_group_rule" "redis_security_group_ingress_ecs" {
+  type                     = "ingress"
+  from_port                = 6379
+  to_port                  = 6379
+  protocol                 = "tcp"
+  source_security_group_id = var.ecs_security_group
+  security_group_id        = aws_security_group.redis_security_group.id
+  description              = "access from ecs tasks"
 }
 
 resource "aws_security_group_rule" "redis_security_group_full_egress" {

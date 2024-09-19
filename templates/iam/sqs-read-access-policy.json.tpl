@@ -5,9 +5,16 @@
         "Effect": "Allow",
         "Action": [
           "sqs:GetQueueUrl",
+          "sqs:GetQueueAttributes",
+          "sqs:ListQueues",
           "sqs:SendMessage",
+          "sqs:SendMessageBatch",
           "sqs:ReceiveMessage",
-          "sqs:DeleteMessage"
+          "sqs:DeleteMessage",
+          "sqs:DeleteMessageBatch",
+          "sqs:ChangeMessageVisibility",
+          "sqs:ChangeMessageVisibilityBatch",
+          "sqs:GetQueueAttributes"
         ],
         "Resource": ${jsonencode(queue_arns)}
       }

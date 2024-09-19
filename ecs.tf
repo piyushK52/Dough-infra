@@ -77,6 +77,14 @@ resource "aws_security_group" "ecs_security_group" {
     security_groups = [aws_security_group.public_lb_security_group.id]
   }
 
+  ingress {
+    description     = "scale server access"
+    protocol        = "tcp"
+    from_port       = var.infra_config.banodoco_scale_server.app_port
+    to_port         = var.infra_config.banodoco_scale_server.app_port
+    security_groups = [aws_security_group.public_lb_security_group.id]
+  }
+
 
   # ingress {
   #   description     = "Allow traffic from EC2 machine"

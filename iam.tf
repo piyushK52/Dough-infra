@@ -57,16 +57,30 @@ data "template_file" "ecs_task_execution_policy_json" {
   template = file("./templates/iam/ecs-policy.json.tpl")
 }
 
+data "template_file" "ecs_task_protection_policy_json" {
+  template = file("./templates/iam/ecs-task-protection-policy.json.tpl")
+}
+
+resource "aws_iam_policy" "ecs_task_protection_update_policy" {
+  name        = "ecs-task-protection-policy"
+  description = "IAM policy for ECS task protection"
+  policy      = data.template_file.ecs_task_protection_policy_json.rendered
+}
+
+# this is the role that your application code running inside the container assumes
 resource "aws_iam_role" "ecs_task_role" {
   name               = "ecs-task-role"
   assume_role_policy = data.template_file.ecs_task_execution_policy_json.rendered
 }
 
+# this role is used by the ECS agent and the Docker daemon.
+# it's used for actions that need to be performed before your container starts and for supporting operations.
 resource "aws_iam_role" "ecs_task_execution_role" {
   name               = "ecs-task-execution-role"
   assume_role_policy = data.template_file.ecs_task_execution_policy_json.rendered
 }
 
+# some things that this policy helps in - pull container images from ECR, send container logs to CloudWatch, interact with ssm etc..
 resource "aws_iam_role_policy_attachment" "ecs_task_execution_policy_attachment" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
   role       = aws_iam_role.ecs_task_execution_role.name
@@ -80,6 +94,11 @@ resource "aws_iam_role_policy_attachment" "s3_full_access_policy_attachment_ecs_
 resource "aws_iam_role_policy_attachment" "ssm_permissions_policy_attachment_ecs_task" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMReadOnlyAccess"
   role       = aws_iam_role.ecs_task_role.name
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_task_protection_policy_attachment_ecs_task" {
+  policy_arn  = aws_iam_policy.ecs_task_protection_update_policy.arn
+  role        = aws_iam_role.ecs_task_role.name
 }
 
 # backend user for s3 access ---------------------------------------
